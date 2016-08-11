@@ -2,7 +2,7 @@ async = require 'async'
 
 PeterCreator                = require './peter-creator'
 PeterPartyCreator           = require './peter-party-creator'
-PeterPartyToItself          = require './peter-party-to-itself'
+PeterPartyToItself          = require './peter-party-to-itself-subscriber'
 PeterPartyToPeterSubscriber = require './peter-party-to-peter-subscriber'
 
 class PeterPartyPlanner
