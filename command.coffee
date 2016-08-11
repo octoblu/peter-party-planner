@@ -55,7 +55,7 @@ class Command
       console.error colors.red 'Missing required parameter --peters, -p, or env: PPP_PETERS' unless options.peters?
       process.exit 1
 
-    return _.pick options, 'owner', 'peter'
+    return _.pick options, 'owner', 'peters'
 
   run: =>
     planner = new PeterPartyPlanner {@meshbluConfig, @ownerUUID, @petersCount}
