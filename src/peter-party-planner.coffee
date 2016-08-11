@@ -8,7 +8,7 @@ class PeterPartyPlanner
   constructor: ({@meshbluConfig, @ownerUUID, @petersCount}={}) ->
     throw new Error 'Missing required parameter: meshbluConfig'  unless @meshbluConfig?
     throw new Error 'Missing required parameter: ownerUUID'      unless @ownerUUID?
-    throw new Error 'Missing required parameter: peterPartyUUID' unless @peterPartyUUID?
+    throw new Error 'Missing required parameter: petersCount'    unless @petersCount?
 
   plan: (callback) =>
     async.series [
