@@ -1,13 +1,10 @@
-async         = require 'async'
 colors        = require 'colors'
 dashdash      = require 'dashdash'
 _             = require 'lodash'
 MeshbluConfig = require 'meshblu-config'
 
 packageJSON       = require './package.json'
-PeterCreator      = require './src/peter-creator'
-PeterPartyCreator = require './src/peter-party-creator'
-PeterPartyToPeterSubscriber = require './src/peter-party-to-peter-subscriber'
+PeterPartyPlanner = require './src/peter-party-planner'
 
 OPTIONS = [{
   names: ['help', 'h']
@@ -35,13 +32,14 @@ class Command
     process.on 'uncaughtException', @die
 
     options = @parseOptions()
-    @petersCount = options.peters
-    @ownerUUID   = options.owner
+
+    @meshbluConfig = new MeshbluConfig().toJSON()
+    @ownerUUID     = options.owner
+    @petersCount   = options.peters
 
   parseOptions: =>
     parser = dashdash.createParser({options: OPTIONS})
     options = parser.parse(process.argv)
-    @meshbluConfig = new MeshbluConfig().toJSON()
 
     if options.help
       console.log "usage: meshblu-verifier-http [OPTIONS]\noptions:\n#{parser.help({includeEnv: true})}"
@@ -60,42 +58,13 @@ class Command
     return _.pick options, 'owner', 'peter'
 
   run: =>
-    async.series [
-      @_createPeterParty
-      @_createPeters
-      @_subscribePeterPartyToPeters
-    ], @die
+    planner = new PeterPartyPlanner {@meshbluConfig, @ownerUUID, @petersCount}
+    planner.plan @die
 
   die: (error) =>
     return process.exit(0) unless error?
     console.error 'ERROR'
     console.error error.stack
     process.exit 1
-
-  _createPeter: (i, callback) =>
-    creator = new PeterCreator {@meshbluConfig, @ownerUUID, @peterPartyUUID}
-    creator.create (error, peter) =>
-      return callback error if error?
-      @_pushPeter peter.uuid
-      callback()
-
-  _createPeters: (callback) =>
-    return callback() unless @petersCount > 0
-    async.times @petersCount, @_createPeter, callback
-
-  _createPeterParty: (callback) =>
-    creator = new PeterPartyCreator {@meshbluConfig, @ownerUUID}
-    creator.create (error, peterParty) =>
-      return callback error if error?
-      @peterPartyUUID = peterParty.uuid
-      callback()
-
-  _pushPeter: (uuid) =>
-    @peterUUIDs ?= []
-    @peterUUIDs.push uuid
-
-  _subscribePeterPartyToPeters: (callback) =>
-    subscriber = new PeterPartyToPeterSubscriber {@meshbluConfig, @peterPartyUUID}
-    async.each @peterUUIDs, subscriber.subscribe, callback
 
 module.exports = Command
