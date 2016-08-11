@@ -25,6 +25,11 @@ describe 'PeterPartyCreator', ->
             online: true
             meshblu:
               version: '2.0.0'
+              forwarders:
+                configure:
+                  received:
+                    type: 'meshblu'
+                    emitType: 'configure.sent'
               whitelists:
                 configure:
                   update: [{uuid: 'owner-uuid'}]
