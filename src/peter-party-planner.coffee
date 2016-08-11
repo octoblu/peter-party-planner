@@ -2,6 +2,7 @@ async = require 'async'
 
 PeterCreator                = require './peter-creator'
 PeterPartyCreator           = require './peter-party-creator'
+PeterPartyToItself          = require './peter-party-to-itself'
 PeterPartyToPeterSubscriber = require './peter-party-to-peter-subscriber'
 
 class PeterPartyPlanner
@@ -15,6 +16,7 @@ class PeterPartyPlanner
       @_createPeterParty
       @_createPeters
       @_subscribePeterPartyToPeters
+      @_subscribePeterPartyToItself
     ], callback
 
   _createPeter: (i, callback) =>
@@ -42,5 +44,9 @@ class PeterPartyPlanner
   _subscribePeterPartyToPeters: (callback) =>
     subscriber = new PeterPartyToPeterSubscriber {@meshbluConfig, @peterPartyUUID}
     async.each @peterUUIDs, subscriber.subscribe, callback
+
+  _subscribePeterPartyToItself: (callback) =>
+    subscriber = new PeterPartyToItself {@meshbluConfig, @peterPartyUUID}
+    subscriber.subscribe callback
 
 module.exports = PeterPartyPlanner
