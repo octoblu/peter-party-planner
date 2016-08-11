@@ -96,5 +96,4 @@ class Command
     subscriber = new PeterPartyToPeterSubscriber {@peterPartyUUID}
     async.each @peterUUIDs, subscriber.subscribe, callback
 
-
 module.exports = Command
