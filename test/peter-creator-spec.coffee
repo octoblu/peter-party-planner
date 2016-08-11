@@ -22,6 +22,7 @@ describe 'PeterCreator', ->
             owner: 'owner-uuid'
             type: 'device:peter'
             logo: 'https://s3-us-west-2.amazonaws.com/octoblu-cdn/fleet/KijEejxiq.svg'
+            online: true
             meshblu:
               version: '2.0.0'
               whitelists:

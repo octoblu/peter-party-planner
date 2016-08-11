@@ -4,7 +4,7 @@ class PeterPartyCreator
   constructor: ({@ownerUUID, @meshbluConfig}={}) ->
     throw new Error 'Missing required parameter: meshbluConfig' unless @meshbluConfig?
     throw new Error 'Missing required parameter: ownerUUID' unless @ownerUUID?
-    
+
     @meshblu = new MeshbluHTTP @meshbluConfig
 
   create: (done) =>
@@ -14,6 +14,7 @@ class PeterPartyCreator
     owner: @ownerUUID
     type: 'device:peter-party'
     logo: 'https://s3-us-west-2.amazonaws.com/octoblu-cdn/fleet/peters.svg'
+    online: true
     meshblu:
       version: '2.0.0'
       whitelists:
