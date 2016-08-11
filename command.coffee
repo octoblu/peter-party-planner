@@ -1,7 +1,8 @@
-async    = require 'async'
-colors   = require 'colors'
-dashdash = require 'dashdash'
-_        = require 'lodash'
+async         = require 'async'
+colors        = require 'colors'
+dashdash      = require 'dashdash'
+_             = require 'lodash'
+MeshbluConfig = require 'meshblu-config'
 
 packageJSON       = require './package.json'
 PeterCreator      = require './src/peter-creator'
@@ -40,6 +41,7 @@ class Command
   parseOptions: =>
     parser = dashdash.createParser({options: OPTIONS})
     options = parser.parse(process.argv)
+    @meshbluConfig = new MeshbluConfig().toJSON()
 
     if options.help
       console.log "usage: meshblu-verifier-http [OPTIONS]\noptions:\n#{parser.help({includeEnv: true})}"
@@ -71,7 +73,7 @@ class Command
     process.exit 1
 
   _createPeter: (i, callback) =>
-    creator = new PeterCreator {@ownerUUID, @peterPartyUUID}
+    creator = new PeterCreator {@meshbluConfig, @ownerUUID, @peterPartyUUID}
     creator.create (error, peter) =>
       return callback error if error?
       @_pushPeter peter.uuid
@@ -82,7 +84,7 @@ class Command
     async.times @petersCount, @_createPeter, callback
 
   _createPeterParty: (callback) =>
-    creator = new PeterPartyCreator ownerUUID: @ownerUUID
+    creator = new PeterPartyCreator {@meshbluConfig, @ownerUUID}
     creator.create (error, peterParty) =>
       return callback error if error?
       @peterPartyUUID = peterParty.uuid
@@ -93,7 +95,7 @@ class Command
     @peterUUIDs.push uuid
 
   _subscribePeterPartyToPeters: (callback) =>
-    subscriber = new PeterPartyToPeterSubscriber {@peterPartyUUID}
+    subscriber = new PeterPartyToPeterSubscriber {@meshbluConfig, @peterPartyUUID}
     async.each @peterUUIDs, subscriber.subscribe, callback
 
 module.exports = Command
