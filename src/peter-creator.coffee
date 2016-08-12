@@ -38,5 +38,9 @@ class PeterCreator
               properties:
                 roomId:
                   type: 'string'
+                actions:
+                  type: 'array'
+                  items:
+                    type: 'string'
 
 module.exports = PeterCreator
