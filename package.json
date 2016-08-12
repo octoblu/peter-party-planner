@@ -1,6 +1,6 @@
 {
   "name": "@octoblu/peter-party-planner",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Put some description here",
   "keywords": [
     "cool",
@@ -14,8 +14,10 @@
   },
   "bin": {
     "peter-party-planner": "command.js",
+    "peter-party-planner-destroy": "command-destroy.js",
     "peter-party-planner-init": "command-init.js",
     "ppp": "command.js",
+    "ppp-destroy": "command-destroy.js",
     "ppp-init": "command-init.js"
   },
   "repository": {
