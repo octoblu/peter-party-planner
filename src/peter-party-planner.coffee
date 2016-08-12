@@ -24,7 +24,7 @@ class PeterPartyPlanner
 
   _createPeter: (i, callback) =>
     creator = new PeterCreator {@meshbluConfig, @ownerUUID, @peterPartyUUID}
-    creator.create (error, peter) =>
+    creator.create i, (error, peter) =>
       return callback error if error?
       @_pushPeter peter.uuid
       callback()

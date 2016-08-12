@@ -34,11 +34,13 @@ describe 'PeterCreator', ->
                   view: [{uuid: 'owner-uuid'}]
             schemas:
               version: '2.0.0'
+              selected:
+                configure: 'Default'
               configure:
                 Default:
                   type: 'object'
                   properties:
-                    data:
+                    options:
                       type: 'object'
                       properties:
                         roomId:
