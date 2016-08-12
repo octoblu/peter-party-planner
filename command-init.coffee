@@ -1,5 +1,7 @@
 colors        = require 'colors'
+cson          = require 'cson'
 dashdash      = require 'dashdash'
+fs            = require 'fs'
 _             = require 'lodash'
 MeshbluConfig = require 'meshblu-config'
 
@@ -7,6 +9,10 @@ packageJSON       = require './package.json'
 PeterPartyPlanner = require './src/peter-party-planner'
 
 OPTIONS = [{
+  names: ['file', 'f']
+  type: 'string'
+  help: 'File path to write the manifest to. If omitted, the manifest will be written to std out instead'
+}, {
   names: ['help', 'h']
   type: 'bool'
   help: 'Print this help and exit.'
@@ -36,6 +42,7 @@ class CommandInit
     options = @parseOptions(argv)
 
     @meshbluConfig = new MeshbluConfig().toJSON()
+    @filePath      = options.file
     @ownerUUID     = options.owner
     @petersCount   = options.peters
 
@@ -57,11 +64,15 @@ class CommandInit
       console.error colors.red 'Missing required parameter --peters, -p, or env: PPP_PETERS' unless options.peters?
       process.exit 1
 
-    return _.pick options, 'owner', 'peters'
+    return _.pick options, 'file', 'owner', 'peters'
 
   run: =>
     planner = new PeterPartyPlanner {@meshbluConfig, @ownerUUID, @petersCount}
-    planner.plan @die
+    planner.plan (error, manifest) =>
+      return @die error if error?
+      @output cson.stringify manifest
+      @die()
+
 
   die: (error) =>
     return process.exit(0) unless error?
@@ -69,9 +80,16 @@ class CommandInit
     console.error error.stack
     process.exit 1
 
+  output: (output) =>
+    return console.log output unless @filePath?
+    fs.writeFileSync @filePath, output
+
   usage: (parser) =>
     return """
     usage: peter-party-planner init [OPTIONS]
+
+    init will create a new party, create new peters, add the peters to
+    the party, and produce a party manifest.
 
     options:
     #{parser.help({includeEnv: true})}

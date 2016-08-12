@@ -1,4 +1,5 @@
 async = require 'async'
+_     = require 'lodash'
 
 PeterCreator                = require './peter-creator'
 PeterPartyCreator           = require './peter-party-creator'
@@ -17,7 +18,9 @@ class PeterPartyPlanner
       @_createPeters
       @_subscribePeterPartyToPeters
       @_subscribePeterPartyToItself
-    ], callback
+    ], (error) =>
+      return callback error if error?
+      callback null, _.cloneDeep({@peterPartyUUID, @peterUUIDs})
 
   _createPeter: (i, callback) =>
     creator = new PeterCreator {@meshbluConfig, @ownerUUID, @peterPartyUUID}

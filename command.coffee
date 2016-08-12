@@ -2,10 +2,14 @@ colors        = require 'colors'
 dashdash      = require 'dashdash'
 _             = require 'lodash'
 
-packageJSON       = require './package.json'
-CommandInit       = require './command-init.coffee'
+packageJSON    = require './package.json'
+CommandDestroy = require './command-destroy.coffee'
+CommandInit    = require './command-init.coffee'
 
 SUB_COMMANDS = [{
+  name: 'destroy'
+  command: CommandDestroy
+},{
   name: 'init'
   command: CommandInit
 }]
@@ -62,7 +66,8 @@ class Command
     usage: peter-party-planner [OPTIONS] <COMMAND>
 
     commands:
-        init    initialize a new party (with new peters)
+        destroy  destroy an existing party and all associated peters
+        init     initialize a new party (with new peters)
 
     options:
     #{parser.help({includeEnv: true})}
