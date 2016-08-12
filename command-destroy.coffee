@@ -1,8 +1,11 @@
+cson          = require 'cson'
 dashdash      = require 'dashdash'
+fs            = require 'fs'
 _             = require 'lodash'
 MeshbluConfig = require 'meshblu-config'
 
-packageJSON       = require './package.json'
+packageJSON = require './package.json'
+Destroyer   = require './src/destroyer'
 
 OPTIONS = [{
   names: ['file', 'f']
@@ -26,7 +29,7 @@ class CommandInit
     options = @parseOptions(argv)
 
     @meshbluConfig = new MeshbluConfig().toJSON()
-    @filePath      = options.file
+    @manifest = cson.parse fs.readFileSync options.file
 
   parseOptions: (argv) =>
     parser = dashdash.createParser({options: OPTIONS})
@@ -43,7 +46,9 @@ class CommandInit
     return _.pick options, 'file'
 
   run: =>
-    console.log 'totally gonna do that'
+    destroyer = new Destroyer {@manifest, @meshbluConfig}
+    destroyer.destroy @die
+
 
   die: (error) =>
     return process.exit(0) unless error?
