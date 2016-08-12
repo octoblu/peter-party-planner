@@ -12,7 +12,12 @@
     "name": "Octoblu",
     "url": "https://github.com/octoblu"
   },
-  "bin": "command.js",
+  "bin": {
+    "peter-party-planner": "command.js",
+    "peter-party-planner-init": "command-init.js",
+    "ppp": "command.js",
+    "ppp-init": "command-init.js"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/octoblu/peter-party-planner.git"

@@ -1,26 +1,19 @@
 colors        = require 'colors'
 dashdash      = require 'dashdash'
 _             = require 'lodash'
-MeshbluConfig = require 'meshblu-config'
 
 packageJSON       = require './package.json'
-PeterPartyPlanner = require './src/peter-party-planner'
+CommandInit       = require './command-init.coffee'
+
+SUB_COMMANDS = [{
+  name: 'init'
+  command: CommandInit
+}]
 
 OPTIONS = [{
   names: ['help', 'h']
   type: 'bool'
   help: 'Print this help and exit.'
-}, {
-  names: ['owner', 'owner-uuid', 'o']
-  type: 'string'
-  env: 'PPP_OWNER'
-  help: 'Uuid of the owner of this party (and all associated petes)'
-}, {
-  names: ['peters', 'peters-count', 'p']
-  type: 'integer'
-  env: 'PPP_PETERS'
-  default: 1
-  help: 'Number of peters in this party'
 }, {
   names: ['version', 'v']
   type: 'bool'
@@ -28,43 +21,51 @@ OPTIONS = [{
 }]
 
 class Command
-  constructor: ->
+  constructor: (argv) ->
     process.on 'uncaughtException', @die
+    {SubCommand} = @parseOptions(argv)
+    @subCommand = new SubCommand argv
 
-    options = @parseOptions()
+  parseOptions: (argv) =>
+    parser = dashdash.createParser({options: OPTIONS, allowUnknown: true, interspersed: false})
+    options = parser.parse(argv)
 
-    @meshbluConfig = new MeshbluConfig().toJSON()
-    @ownerUUID     = options.owner
-    @petersCount   = options.peters
-
-  parseOptions: =>
-    parser = dashdash.createParser({options: OPTIONS})
-    options = parser.parse(process.argv)
+    SubCommand = _.find SUB_COMMANDS, {name: _.first(options._args)}
 
     if options.help
-      console.log "usage: meshblu-verifier-http [OPTIONS]\noptions:\n#{parser.help({includeEnv: true})}"
+      console.log @usage parser
       process.exit 0
 
     if options.version
       console.log packageJSON.version
       process.exit 0
 
-    unless options.owner? && options.peters?
-      console.error "usage: meshblu-verifier-http [OPTIONS]\noptions:\n#{parser.help({includeEnv: true})}"
-      console.error colors.red 'Missing required parameter --owner, -o, or env: PPP_OWNER' unless options.owner?
-      console.error colors.red 'Missing required parameter --peters, -p, or env: PPP_PETERS' unless options.peters?
+    unless SubCommand?
+      console.error @usage parser
+      console.error colors.red 'Invalid <COMMAND>'
       process.exit 1
 
-    return _.pick options, 'owner', 'peters'
+    return {SubCommand: SubCommand.command}
+
 
   run: =>
-    planner = new PeterPartyPlanner {@meshbluConfig, @ownerUUID, @petersCount}
-    planner.plan @die
+    @subCommand.run()
 
   die: (error) =>
     return process.exit(0) unless error?
     console.error 'ERROR'
     console.error error.stack
     process.exit 1
+
+  usage: (parser) =>
+    return """
+    usage: peter-party-planner [OPTIONS] <COMMAND>
+
+    commands:
+        init    initialize a new party (with new peters)
+
+    options:
+    #{parser.help({includeEnv: true})}
+    """
 
 module.exports = Command
