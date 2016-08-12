@@ -8,12 +8,13 @@ class PeterCreator
 
     @meshblu = new MeshbluHTTP @meshbluConfig
 
-  create: (done) =>
-    @meshblu.register @_registerParams(), done
+  create: (i, done) =>
+    @meshblu.register @_registerParams(i), done
 
-  _registerParams: =>
+  _registerParams: (i) =>
     owner: @ownerUUID
     type: 'device:peter'
+    name: "peter-#{i}"
     logo: 'https://s3-us-west-2.amazonaws.com/octoblu-cdn/fleet/KijEejxiq.svg'
     online: true
     meshblu:
@@ -24,5 +25,16 @@ class PeterCreator
           sent: [{uuid: @peterPartyUUID}]
         discover:
           view: [{uuid: @ownerUUID}]
+    schemas:
+      version: '2.0.0'
+      configure:
+        Default:
+          type: 'object'
+          properties:
+            data:
+              type: 'object'
+              properties:
+                roomId:
+                  type: 'string'
 
 module.exports = PeterCreator

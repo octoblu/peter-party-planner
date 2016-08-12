@@ -21,6 +21,7 @@ describe 'PeterCreator', ->
           .send({
             owner: 'owner-uuid'
             type: 'device:peter'
+            name: 'peter-1'
             logo: 'https://s3-us-west-2.amazonaws.com/octoblu-cdn/fleet/KijEejxiq.svg'
             online: true
             meshblu:
@@ -31,6 +32,17 @@ describe 'PeterCreator', ->
                   sent: [{uuid: 'peter-party-uuid'}]
                 discover:
                   view: [{uuid: 'owner-uuid'}]
+            schemas:
+              version: '2.0.0'
+              configure:
+                Default:
+                  type: 'object'
+                  properties:
+                    data:
+                      type: 'object'
+                      properties:
+                        roomId:
+                          type: 'string'
           })
           .reply 201, {}
 
@@ -41,7 +53,7 @@ describe 'PeterCreator', ->
             protocol: 'http'
             hostname: 'localhost'
             port: @meshblu.address().port
-        @sut.create done
+        @sut.create 1, done
 
       it 'should create a peter', ->
         expect(@register.isDone).to.be.true
