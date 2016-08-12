@@ -27,9 +27,10 @@ describe 'PeterPartyCreator', ->
               version: '2.0.0'
               forwarders:
                 configure:
-                  received:
+                  received: [{
                     type: 'meshblu'
                     emitType: 'configure.sent'
+                  }]
               whitelists:
                 configure:
                   update: [{uuid: 'owner-uuid'}]
