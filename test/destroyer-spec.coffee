@@ -30,7 +30,7 @@ describe 'Destroyer', ->
           .set 'Authorization', "Basic #{auth}"
           .reply 204
 
-        @sut = new Destroyer {@meshbluConfig, manifest: {peterPartyUUID: 'peter-party-uuid'}}
+        @sut = new Destroyer {@meshbluConfig, manifest: {peterParty: {uuid: 'peter-party-uuid'}}}
         @sut.destroy done
 
       it 'should unregister the party', ->
@@ -51,9 +51,12 @@ describe 'Destroyer', ->
           .reply 204
 
         @sut = new Destroyer {@meshbluConfig, manifest: {
-          peterPartyUUID: 'peter-party-uuid'
-          peterUUIDs: ['peter-1-uuid']
-          }}
+          peterParty:
+            uuid: 'peter-party-uuid'
+          peters: [{
+            uuid: 'peter-1-uuid'
+          }]
+        }}
         @sut.destroy done
 
       it 'should unregister the party', ->

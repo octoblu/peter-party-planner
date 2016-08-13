@@ -20,13 +20,13 @@ class PeterPartyPlanner
       @_subscribePeterPartyToItself
     ], (error) =>
       return callback error if error?
-      callback null, _.cloneDeep({@peterPartyUUID, @peterUUIDs})
+      callback null, _.cloneDeep({peterParty: {uuid: @peterPartyUUID}, @peters})
 
   _createPeter: (i, callback) =>
     creator = new PeterCreator {@meshbluConfig, @ownerUUID, @peterPartyUUID}
     creator.create i, (error, peter) =>
       return callback error if error?
-      @_pushPeter peter.uuid
+      @_pushPeter peter
       callback()
 
   _createPeters: (callback) =>
@@ -41,12 +41,15 @@ class PeterPartyPlanner
       callback()
 
   _pushPeter: (uuid) =>
-    @peterUUIDs ?= []
-    @peterUUIDs.push uuid
+    @peters ?= []
+    @peters.push uuid
+
+  _subscribePeterPartyToPeter: (peter, callback) =>
+    subscriber = new PeterPartyToPeterSubscriber {@meshbluConfig, @peterPartyUUID}
+    subscriber.subscribe peter.uuid, callback
 
   _subscribePeterPartyToPeters: (callback) =>
-    subscriber = new PeterPartyToPeterSubscriber {@meshbluConfig, @peterPartyUUID}
-    async.each @peterUUIDs, subscriber.subscribe, callback
+    async.each @peters, @_subscribePeterPartyToPeter, callback
 
   _subscribePeterPartyToItself: (callback) =>
     subscriber = new PeterPartyToItself {@meshbluConfig, @peterPartyUUID}

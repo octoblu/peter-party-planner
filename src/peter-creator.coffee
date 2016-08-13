@@ -1,3 +1,4 @@
+_           = require 'lodash'
 MeshbluHTTP = require 'meshblu-http'
 
 class PeterCreator
@@ -9,7 +10,9 @@ class PeterCreator
     @meshblu = new MeshbluHTTP @meshbluConfig
 
   create: (i, done) =>
-    @meshblu.register @_registerParams(i), done
+    @meshblu.register @_registerParams(i), (error, peter) =>
+      return done error if error?
+      return done null, _.pick(peter, 'uuid', 'name')
 
   _registerParams: (i) =>
     owner: @ownerUUID
