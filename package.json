@@ -16,9 +16,11 @@
     "peter-party-planner": "command.js",
     "peter-party-planner-destroy": "command-destroy.js",
     "peter-party-planner-init": "command-init.js",
+    "peter-party-planner-remove": "command-remove.js",
     "ppp": "command.js",
     "ppp-destroy": "command-destroy.js",
-    "ppp-init": "command-init.js"
+    "ppp-init": "command-init.js",
+    "ppp-remove": "command-remove.js"
   },
   "repository": {
     "type": "git",

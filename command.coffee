@@ -5,6 +5,7 @@ _             = require 'lodash'
 packageJSON    = require './package.json'
 CommandDestroy = require './command-destroy.coffee'
 CommandInit    = require './command-init.coffee'
+CommandRemove  = require './command-remove.coffee'
 
 SUB_COMMANDS = [{
   name: 'destroy'
@@ -12,6 +13,9 @@ SUB_COMMANDS = [{
 },{
   name: 'init'
   command: CommandInit
+},{
+  name: 'remove'
+  command: CommandRemove
 }]
 
 OPTIONS = [{
@@ -68,6 +72,7 @@ class Command
     commands:
         destroy  destroy an existing party and all associated peters
         init     initialize a new party (with new peters)
+        remove   remove a peter from the party (and destroy it)
 
     options:
     #{parser.help({includeEnv: true})}

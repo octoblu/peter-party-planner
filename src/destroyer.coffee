@@ -2,7 +2,9 @@ async       = require 'async'
 MeshbluHttp = require 'meshblu-http'
 
 class Destroyer
-  constructor: ({meshbluConfig, @manifest}) ->
+  constructor: ({meshbluConfig, @manifest}={}) ->
+    throw new Error 'Missing required parameter: meshbluConfig'  unless meshbluConfig?
+    throw new Error 'Missing required parameter: manifest'       unless @manifest?
     @meshblu = new MeshbluHttp meshbluConfig
 
   destroy: (callback) =>
