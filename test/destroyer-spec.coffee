@@ -3,7 +3,7 @@
 enableDestroy = require 'server-destroy'
 shmock        = require 'shmock'
 
-Destroyer = require '../src/Destroyer'
+Destroyer = require '../src/destroyer'
 
 describe 'Destroyer', ->
   beforeEach ->
