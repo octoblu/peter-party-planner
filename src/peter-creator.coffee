@@ -12,7 +12,7 @@ class PeterCreator
   create: ({name}, done) =>
     @meshblu.register @_registerParams({name}), (error, peter) =>
       return done error if error?
-      return done null, _.pick(peter, 'uuid', 'name')
+      return done null, _.pick(peter, 'uuid', 'name', 'token')
 
   _registerParams: ({name}) =>
     owner: @ownerUUID
