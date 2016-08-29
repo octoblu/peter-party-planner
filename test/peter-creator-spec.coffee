@@ -59,7 +59,8 @@ describe 'PeterCreator', ->
             protocol: 'http'
             hostname: 'localhost'
             port: @meshblu.address().port
-        @sut.create 1, done
+
+        @sut.create name: "peter-1", done
 
       it 'should create a peter', ->
         expect(@register.isDone).to.be.true

@@ -9,15 +9,15 @@ class PeterCreator
 
     @meshblu = new MeshbluHTTP @meshbluConfig
 
-  create: (i, done) =>
-    @meshblu.register @_registerParams(i), (error, peter) =>
+  create: ({name}, done) =>
+    @meshblu.register @_registerParams({name}), (error, peter) =>
       return done error if error?
       return done null, _.pick(peter, 'uuid', 'name')
 
-  _registerParams: (i) =>
+  _registerParams: ({name}) =>
     owner: @ownerUUID
     type: 'device:peter'
-    name: "peter-#{i}"
+    name: name
     logo: 'https://s3-us-west-2.amazonaws.com/octoblu-cdn/fleet/KijEejxiq.svg'
     online: true
     meshblu:

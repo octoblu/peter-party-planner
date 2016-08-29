@@ -1,6 +1,7 @@
 {
-  "name": "@octoblu/peter-party-planner",
-  "version": "3.0.0",
+  "name": "peter-party-planner",
+  "main": "index.js",
+  "version": "3.0.1",
   "description": "Put some description here",
   "keywords": [
     "cool",
