@@ -16,7 +16,11 @@ describe 'PeterPartyToPeterSubscriber', ->
   describe '->create', ->
     describe 'with an peterPartyUUID of peter-party-uuid and a peterUUID of peter-uuid', ->
       beforeEach (done) ->
-        @createSubscription = @meshblu
+        @createBroadcastSentSubscription = @meshblu
+          .post '/v2/devices/peter-party-uuid/subscriptions/peter-uuid/broadcast.sent'
+          .reply 201, {}
+
+        @createConfigureSentSubscription = @meshblu
           .post '/v2/devices/peter-party-uuid/subscriptions/peter-uuid/configure.sent'
           .reply 201, {}
 
@@ -28,5 +32,8 @@ describe 'PeterPartyToPeterSubscriber', ->
             port: @meshblu.address().port
         @sut.subscribe 'peter-uuid', done
 
-      it 'should create a peter', ->
-        expect(@createSubscription.isDone).to.be.true
+      it 'should create a broadcast.sent subscription to the peter', ->
+        expect(@createBroadcastSentSubscription.isDone).to.be.true
+
+      it 'should create a configure.sent subscription to the peter', ->
+        expect(@createConfigureSentSubscription.isDone).to.be.true
