@@ -21,6 +21,7 @@ describe 'PeterCreator', ->
           .send({
             owner: 'owner-uuid'
             type: 'octoblu:smartspaces:user'
+            userGroup: 'peter-party-uuid'
             name: 'peter-1'
             logo: 'https://s3-us-west-2.amazonaws.com/octoblu-cdn/fleet/KijEejxiq.svg'
             online: true
