@@ -13,7 +13,7 @@ describe 'PeterPartyToPeterSubscriber', ->
   afterEach (done) ->
     @meshblu.destroy done
 
-  describe '->create', ->
+  describe '->subscribe', ->
     describe 'with an peterPartyUUID of peter-party-uuid and a peterUUID of peter-uuid', ->
       beforeEach (done) ->
         @createBroadcastSentSubscription = @meshblu
@@ -23,6 +23,13 @@ describe 'PeterPartyToPeterSubscriber', ->
         @createConfigureSentSubscription = @meshblu
           .post '/v2/devices/peter-party-uuid/subscriptions/peter-uuid/configure.sent'
           .reply 201, {}
+
+        @updateDiscoverAs = @meshblu
+          .put '/v2/devices/peter-party-uuid'
+          .send
+            $addToSet:
+              'meshblu.whitelists.discover.as': {uuid: 'peter-uuid'}
+          .reply 204
 
         @sut = new PeterPartyToPeterSubscriber
           peterPartyUUID: 'peter-party-uuid'
@@ -37,3 +44,6 @@ describe 'PeterPartyToPeterSubscriber', ->
 
       it 'should create a configure.sent subscription to the peter', ->
         expect(@createConfigureSentSubscription.isDone).to.be.true
+
+      it 'should update the peter-party discover.as whitelist', ->
+        expect(@updateDiscoverAs.isDone).to.be.true

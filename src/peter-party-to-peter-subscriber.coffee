@@ -9,7 +9,9 @@ class PeterPartyToPeterSubscriber
   subscribe: (peterUUID, callback) =>
     @_createBroadcastSentSubscription peterUUID, (error) =>
       return callback error if error?
-      @_createConfigureSentSubscription peterUUID, callback
+      @_createConfigureSentSubscription peterUUID, (error) =>
+        return callback error if error?
+        @_updatePeterPartyDiscoverAs peterUUID, callback
 
   _createBroadcastSentSubscription: (peterUUID, callback) =>
     @meshblu.createSubscription {
@@ -24,5 +26,12 @@ class PeterPartyToPeterSubscriber
       subscriberUuid: @peterPartyUUID
       type: 'configure.sent'
     }, callback
+
+  _updatePeterPartyDiscoverAs: (peterUUID, callback) =>
+    update =
+      $addToSet:
+        'meshblu.whitelists.discover.as': {uuid: peterUUID}
+        
+    @meshblu.updateDangerously @peterPartyUUID, update, callback
 
 module.exports = PeterPartyToPeterSubscriber
