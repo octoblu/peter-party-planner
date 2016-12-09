@@ -15,12 +15,12 @@ describe 'PeterCreator', ->
 
   describe '->create', ->
     describe 'with an ownerUUID of owner-uuid and peterPartyUUID of peter-party-uuid', ->
-      beforeEach (done) ->
+      beforeEach ->
         @register = @meshblu
           .post '/devices'
           .send({
             owner: 'owner-uuid'
-            type: 'device:peter'
+            type: 'octoblu:smartspaces:user'
             name: 'peter-1'
             logo: 'https://s3-us-west-2.amazonaws.com/octoblu-cdn/fleet/KijEejxiq.svg'
             online: true
@@ -50,8 +50,18 @@ describe 'PeterCreator', ->
                           items:
                             type: 'string'
           })
-          .reply 201, {}
+          .reply 201, {uuid: 'peter-uuid'}
 
+      beforeEach ->
+        @updatePeterParty = @meshblu
+          .put('/v2/devices/peter-party-uuid')
+          .send(
+             $addToSet:
+               'meshblu.whitelists.discover.as': {uuid:'peter-uuid'}
+          )
+          .reply 204
+
+      beforeEach (done) ->
         @sut = new PeterCreator
           ownerUUID: 'owner-uuid'
           peterPartyUUID: 'peter-party-uuid'
@@ -64,3 +74,6 @@ describe 'PeterCreator', ->
 
       it 'should create a peter', ->
         expect(@register.isDone).to.be.true
+
+      it 'should allow a peter to discover.as the peter-party', ->
+        expect(@updatePeterParty.isDone).to.be.true

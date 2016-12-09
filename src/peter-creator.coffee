@@ -12,11 +12,13 @@ class PeterCreator
   create: ({name}, done) =>
     @meshblu.register @_registerParams({name}), (error, peter) =>
       return done error if error?
-      return done null, _.pick(peter, 'uuid', 'name', 'token')
+      @meshblu.updateDangerously @peterPartyUUID, {$addToSet: 'meshblu.whitelists.discover.as': {uuid:peter.uuid}}, (error) =>
+        return done error if error?
+        return done null, _.pick(peter, 'uuid', 'name', 'token')
 
   _registerParams: ({name}) =>
     owner: @ownerUUID
-    type: 'device:peter'
+    type: 'octoblu:smartspaces:user'
     name: name
     logo: 'https://s3-us-west-2.amazonaws.com/octoblu-cdn/fleet/KijEejxiq.svg'
     online: true

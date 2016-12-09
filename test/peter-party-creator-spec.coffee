@@ -20,7 +20,7 @@ describe 'PeterPartyCreator', ->
           .post '/devices'
           .send({
             owner: 'owner-uuid'
-            type: 'device:peter-party'
+            type: 'octoblu:smartspaces:user-group'
             logo: 'https://s3-us-west-2.amazonaws.com/octoblu-cdn/fleet/peters.svg'
             online: true
             meshblu:
